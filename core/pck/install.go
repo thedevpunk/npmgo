@@ -9,9 +9,7 @@ import (
 func InstallPackage(wg *sync.WaitGroup, name string, version string, destination string) {
 
 	// Cleanup version
-	pattern := `(\d+\.\d+\.\d+)`
-	versionRegex := regexp.MustCompile(pattern)
-	version = versionRegex.FindString(version)
+	version = getExplicitVersion(version)
 
 	packageInfo, err := fetchPackageInformation(name, version)
 	if err != nil {
@@ -19,12 +17,13 @@ func InstallPackage(wg *sync.WaitGroup, name string, version string, destination
 		return
 	}
 
+	// Install package dependencies (recursively)
 	for name, version := range packageInfo.Dependencies {
 		wg.Add(1)
 		go InstallPackage(wg, name, version, destination)
 	}
 
-	// Download the package.
+	// Download the package
 	globalStore := "D:\\_temp\\go_node_modules_test\\global"
 	globalPackageDestination := globalStore + fmt.Sprintf("\\%s@%s", name, version)
 	tarballPath, err := downloadPackage(packageInfo.Dist.Tarball, packageInfo.Name, packageInfo.Version, globalPackageDestination)
@@ -35,9 +34,15 @@ func InstallPackage(wg *sync.WaitGroup, name string, version string, destination
 
 	extractTarball(tarballPath, globalPackageDestination)
 
-	createSymlink(globalPackageDestination, destination, name)
+	createLink(globalPackageDestination, destination, name)
 
 	deleteTarball(tarballPath)
 
 	wg.Done()
+}
+
+func getExplicitVersion(version string) string {
+	pattern := `(\d+\.\d+\.\d+)`
+	versionRegex := regexp.MustCompile(pattern)
+	return versionRegex.FindString(version)
 }
