@@ -1,8 +1,6 @@
 package main
 
 import (
-	"sync"
-
 	"github.com/thedevpunk/npmgo/pck"
 )
 
@@ -220,21 +218,31 @@ import (
 // }
 
 func main() {
-	packages := []struct {
-		Name    string
-		Version string
-	}{
-		{"express", "4.17.1"},
-		// Add more modules here
+	// packages := []struct {
+	// 	Name    string
+	// 	Version string
+	// }{
+	// 	{"express", "4.17.1"},
+	// 	// Add more modules here
+	// }
+
+	packageInfo := pck.PackageInfo{
+		Name:    "test-app",
+		Version: "1.0.0",
+		Dependencies: map[string]string{
+			"express": "4.17.1",
+		},
 	}
 
-	var wg sync.WaitGroup
+	pck.Install(packageInfo)
 
-	for _, pack := range packages {
-		wg.Add(1)
+	// var wg sync.WaitGroup
 
-		go pck.InstallPackage(&wg, pack.Name, pack.Version, "D:\\_temp\\go_node_modules_test\\node_modules")
-	}
+	// for _, pack := range packages {
+	// 	wg.Add(1)
 
-	wg.Wait()
+	// 	go pck.InstallPackage(&wg, pack.Name, pack.Version, "D:\\_temp\\go_node_modules_test\\node_modules")
+	// }
+
+	// wg.Wait()
 }

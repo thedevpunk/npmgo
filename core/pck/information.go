@@ -7,16 +7,16 @@ import (
 	"net/http"
 )
 
-type PackageInfo struct {
-	Name         string            `json:"name"`
-	Version      string            `json:"version"`
-	Description  string            `json:"description"`
-	Dependencies map[string]string `json:"dependencies"`
-	Dist         struct {
-		Tarball string `json:"tarball"`
-	} `json:"dist"`
-	// Add other fields from the JSON response as needed.
-}
+// type PackageInfo struct {
+// 	Name         string            `json:"name"`
+// 	Version      string            `json:"version"`
+// 	Description  string            `json:"description"`
+// 	Dependencies map[string]string `json:"dependencies"`
+// 	Dist         struct {
+// 		Tarball string `json:"tarball"`
+// 	} `json:"dist"`
+// 	// Add other fields from the JSON response as needed.
+// }
 
 func fetchPackageInformation(name string, version string) (*PackageInfo, error) {
 	url := fmt.Sprintf("https://registry.npmjs.org/%s/%s", name, version)

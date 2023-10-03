@@ -24,29 +24,29 @@ func createLink(source string, nodeModulesDir string, modName string) error {
 	}
 }
 
-func createSymlink(source string, destionation string) error {
-	err := os.Symlink(source, destionation)
+func createSymlink(source string, destination string) error {
+	err := os.Symlink(source, destination)
 	if err != nil {
-		fmt.Println("Error creating symlink:", err)
+		fmt.Printf("Error creating symlink for %s: %v\n", destination, err)
 		return err
 	}
 
-	fmt.Println("Symlink created:", destionation)
+	fmt.Println("Symlink created:", destination)
 
 	return nil
 }
 
-func createJunction(source string, destionation string) error {
-	cmd := exec.Command("cmd.exe", "/C", "mklink", "/J", destionation, source)
+func createJunction(source string, destination string) error {
+	cmd := exec.Command("cmd.exe", "/C", "mklink", "/J", destination, source)
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error creating junction: %v\n", err)
+		fmt.Printf("Error creating junction for %s: %v\n", destination, err)
 		fmt.Println(string(output))
 		return err
 	}
 
-	fmt.Println("Junction created:", destionation)
+	fmt.Println("Junction created:", destination)
 
 	return nil
 }
